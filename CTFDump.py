@@ -70,12 +70,12 @@ class Challenge(object):
 
     @staticmethod
     def escape_filename(filename):
-        return re.sub(r"[^\w\s\-.()]", "", filename.strip())
+        return re.sub(r"[^\w\s\-.()]", "", filename.strip()).replace(" ", "_")
 
     def get_challenge_path(self):
         return path.join(
             self.escape_filename(self.category), self.escape_filename(self.name)
-        )
+        ).replace(" ", "_")
 
     def download_file(self, url, file_path, override=False):
         if "google.com" in url:
