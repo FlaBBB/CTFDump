@@ -2,6 +2,7 @@
 ![Logo](https://github.com/hendrykeren/CTFDump/blob/master/assets/logo/250%20px.png)
 
 CTFd Dump Tool - When you want to have an offline copy of a CTF.
+
 Fork of [realgam3/CTFDump](https://github.com/realgam3/CTFDump)
 
 ### Basic Usage
