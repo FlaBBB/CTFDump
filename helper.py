@@ -80,9 +80,3 @@ def download(response, path):
             for chunk in response.iter_content(512 * 1024):
                 if chunk:
                     f.write(chunk)
-
-
-gdown(
-    "https://drive.google.com/uc?export=download&id=1-XTk3j9UbU0wlVoFJYvfWS0mZvXnC719",
-    "./",
-)
