@@ -6,9 +6,6 @@ from typing import List
 from urllib.parse import urljoin
 
 from cloudscraper import create_scraper
-from ctfs.ctfd import CTFd
-from ctfs.rctf import rCTF
-from requests.utils import CaseInsensitiveDict
 
 from core.challange import Challenge
 
@@ -19,6 +16,9 @@ class NotCompatiblePlatformException(Exception):
 
 class CTF(object):
     def __init__(self, url):
+        if self.__class__.__name__ == "CTF":
+            raise NotCompatiblePlatformException()
+
         self.name = self.__class__.__name__
         self.url = url
         self.session = create_scraper()
@@ -97,6 +97,3 @@ class CTF(object):
             self.save_config()
         else:
             self.logger.info("No changes found")
-
-
-CTFs = CaseInsensitiveDict(data={"CTFd": CTFd, "rCTF": rCTF})

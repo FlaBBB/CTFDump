@@ -4,7 +4,8 @@ import sys
 from argparse import ArgumentDefaultsHelpFormatter, ArgumentParser
 
 from core import __version__
-from core.ctfs.ctf import CTFs, load_config
+from core.ctfs import CTFs
+from core.ctfs.ctf import load_config
 
 
 def main(args=None):
@@ -42,7 +43,12 @@ def main(args=None):
     )
 
     ctf = CTFs.get(sys_args["ctf_platform"])(sys_args["url"])
-    ctf.login(no_login=(sys_args["no_login"] or os.environ.get("CTF_NO_LOGIN")))
+    ctf.login(
+        username=sys_args["username"],
+        password=sys_args["password"],
+        team_token=sys_args["token"],
+        no_login=(sys_args["no_login"] or os.environ.get("CTF_NO_LOGIN")),
+    )
 
     # check available config
     if load_config() and not sys_args["force"]:

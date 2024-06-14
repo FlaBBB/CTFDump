@@ -1,9 +1,8 @@
 import json
 from urllib.parse import unquote, urljoin
 
-from ctfs.ctf import CTF
-
 from core.challange import Challenge
+from core.ctfs.ctf import CTF
 
 
 class BadTokenException(Exception):

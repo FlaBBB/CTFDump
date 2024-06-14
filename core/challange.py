@@ -5,7 +5,7 @@ import re
 from os import path
 from urllib.parse import urlparse
 
-import helper
+from . import helper
 
 
 class Challenge(object):
