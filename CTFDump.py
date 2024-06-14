@@ -374,7 +374,7 @@ def main(args=None):
     )
 
     ctf = CTFs.get(sys_args["ctf_platform"])(sys_args["url"])
-    if sys_args["ctf_platform"] == "rCTF":
+    if sys_args["ctf_platform"].lower() == "rctf":
         if not ctf.login(sys_args["token"]):
             raise BadTokenException()
     elif not sys_args["no_login"] or not os.environ.get("CTF_NO_LOGIN"):
