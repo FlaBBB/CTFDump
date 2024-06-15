@@ -5,7 +5,6 @@ from argparse import ArgumentDefaultsHelpFormatter, ArgumentParser
 
 from core import __version__
 from core.ctfs import CTFs
-from core.ctfs.ctf import load_config
 
 
 def main(args=None):
@@ -51,7 +50,7 @@ def main(args=None):
     )
 
     # check available config
-    if load_config() and not sys_args["force"]:
+    if ctf.load_config() and not sys_args["force"]:
         logging.info("Config file found, updating challenges")
         ctf.update()
     else:
