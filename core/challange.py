@@ -9,7 +9,8 @@ from . import helper
 
 
 class Challenge(object):
-    def __init__(self, name, category="", description="", files=None, value=0):
+    def __init__(self, ctf, name, category="", description="", files=None, value=0):
+        self.ctf = ctf
         self.name = name
         self.category = category
         self.description = description
@@ -78,7 +79,11 @@ class Challenge(object):
 
     def download_all_files(self, force=False):
         for file_url in self.files:
-            self.download_file(file_url, self.get_challenge_path(), force)
+            try:
+                self.download_file(file_url, self.get_challenge_path(), force)
+            except Exception as e:
+                self.logger.error(f"Failed to download {file_url}: {e}")
+                continue
 
     def dump(self):
         # Create challenge directory if not exist
