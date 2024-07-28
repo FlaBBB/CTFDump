@@ -11,28 +11,53 @@ def main(args=None):
     if args is None:
         args = sys.argv[1:]
 
-    parser = ArgumentParser(formatter_class=ArgumentDefaultsHelpFormatter)
+    # Initial parsing to get the platform
+    initial_parser = ArgumentParser(
+        usage="%(prog)s {CTFd,rCTF} <url> [-h] [-v] [-n] [-F] [-S LIMITSIZE]",
+        formatter_class=ArgumentDefaultsHelpFormatter,
+        add_help=False,
+    )
+    initial_parser.add_argument("ctfs", choices=CTFs.keys(), help="ctf platform")
+    initial_args, _ = initial_parser.parse_known_args(args)
+
+    # Add platform-specific arguments
+    if CTFs.get(initial_args.ctfs) == None:
+        print("Invalid platform")
+        initial_parser.print_help()
+        exit(1)
+
+    ctfs = CTFs.get(initial_args.ctfs)
+
+    parser = ArgumentParser(
+        usage=f"%(prog)s {initial_args.ctfs} <url> [-h] [-v] [-n] [-F] [-S LIMITSIZE] ",
+        formatter_class=ArgumentDefaultsHelpFormatter,
+    )
+    ctfs.apply_argparser(parser)
+
+    # Add global arguments
+    parser.add_argument("ctfs")
+    parser.add_argument("url", help="ctf url (for example: https://demo.ctfd.io/)")
     parser.add_argument(
         "-v",
         "--version",
         action="version",
         version="%(prog)s {ver}".format(ver=__version__),
     )
-
-    parser.add_argument("url", help="ctf url (for example: https://demo.ctfd.io/)")
-    parser.add_argument(
-        "-c", "--ctf-platform", choices=CTFs, help="ctf platform", default="CTFd"
-    )
     parser.add_argument(
         "-n", "--no-login", action="store_true", help="login is not needed"
     )
-    parser.add_argument("-u", "--username", help="username")
-    parser.add_argument("-p", "--password", help="password")
-    parser.add_argument("-t", "--token", help="team token for rCTF")
     parser.add_argument(
         "-F", "--force", help="ignore the config file", action="store_true"
     )
-    sys_args = vars(parser.parse_args(args=args))
+    parser.add_argument(
+        "-S",
+        "--limitsize",
+        type=int,
+        help="limit size of download file in Mb",
+        default=10,
+    )
+
+    sys_args = vars(parser.parse_args(args))
 
     # Configure Logger
     logging.basicConfig(
@@ -41,11 +66,11 @@ def main(args=None):
         datefmt="%d-%m-%y %H:%M:%S",
     )
 
-    ctf = CTFs.get(sys_args["ctf_platform"])(sys_args["url"])
+    ctf = ctfs(sys_args["url"])
     ctf.login(
-        username=sys_args["username"],
-        password=sys_args["password"],
-        team_token=sys_args["token"],
+        username=sys_args.get("username"),
+        password=sys_args.get("password"),
+        team_token=sys_args.get("token"),
         no_login=(sys_args["no_login"] or os.environ.get("CTF_NO_LOGIN")),
     )
 

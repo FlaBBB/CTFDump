@@ -37,8 +37,9 @@ class Challenge(object):
         }
 
     @staticmethod
-    def from_dict(data):
+    def from_dict(data, ctfs):
         return Challenge(
+            ctf=ctfs,
             name=data["name"],
             category=data["category"],
             description=data["description"],

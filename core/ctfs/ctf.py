@@ -25,6 +25,10 @@ class CTF(object):
         self.logger = logging.getLogger(__name__)
         self.challanges: List[Challenge] = []
 
+    @staticmethod
+    def apply_argparser(argument_parser):
+        raise NotImplementedError()
+
     def iter_challenges(self):
         raise NotImplementedError()
 
@@ -71,7 +75,7 @@ class CTF(object):
             self.credential_from_dict(config["credentials"])
 
             for challenge in config["challenges"]:
-                self.challanges.append(Challenge.from_dict(challenge))
+                self.challanges.append(Challenge.from_dict(challenge, self))
 
         return True
 

@@ -16,6 +16,11 @@ class rCTF(CTF):
         self.team_token = ""
 
     @staticmethod
+    def apply_argparser(parser):
+        parser.add_argument("-t", "--token", help="team token for rCTF")
+        parser.usage += "[-t TEAM_TOKEN] "
+
+    @staticmethod
     def __get_file_url(file_info):
         return file_info["url"]
 
@@ -35,6 +40,8 @@ class rCTF(CTF):
         )
 
         if not res.ok:
+            print(res.status_code)
+            print(res.content)
             raise BadTokenException()
 
         self.BarerToken = json.loads(res.content)["data"]["authToken"]
