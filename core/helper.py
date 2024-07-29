@@ -49,7 +49,7 @@ def gdrive_size_bypass(response):
     return {i["name"]: i["value"] for i in inputs if i["type"] == "hidden"}
 
 
-def gdown(url, path, enable=False):
+def gdown(url, path, logger, enable=False):
     baseurl = "https://drive.usercontent.google.com/download"
     fileid = url.split("id=")[1]
     params = {"id": fileid}
@@ -62,6 +62,8 @@ def gdown(url, path, enable=False):
     tokens = get_confirm_token(response)
     filename = get_gdrive_name(response)
     filesize = get_content_len(response)
+
+    logger.info(f"Downloading {filename} ({size_converter(filesize)})")
 
     if tokens:
         params.update(dict(confirm=tokens))
@@ -80,3 +82,17 @@ def download(response, path):
             for chunk in response.iter_content(512 * 1024):
                 if chunk:
                     f.write(chunk)
+
+
+def size_converter(size: int | str):
+    if isinstance(size, str):
+        size = int(size)
+
+    if size < 1024:
+        return f"{size} B"
+    elif size < 1024**2:
+        return f"{size/1024:.2f} KB"
+    elif size < 1024**3:
+        return f"{size/1024**2:.2f} MB"
+    else:
+        return f"{size/1024**3:.2f} GB"

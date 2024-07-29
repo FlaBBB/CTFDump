@@ -18,6 +18,12 @@ class Challenge(object):
         self.files = self.collect_files(files, description)
         self.value = value
 
+    def __str__(self):
+        return f'<"{self.name}" ({self.category} - {self.value})>'
+
+    def __repr__(self):
+        return self.__str__()
+
     def __eq__(self, value: object) -> bool:
         return (
             self.name == value.name
@@ -68,10 +74,12 @@ class Challenge(object):
 
     def download_file(self, url, file_path, override=False):
         if "google.com" in url:
-            helper.gdown(url, file_path, enable=override)
+            helper.gdown(url, file_path, self.logger, enable=override)
             return
 
         name = self.escape_filename(path.basename(urlparse(url).path))
+        size = self.ctf.session.head(url).headers.get("Content-Length")
+        self.logger.info(f"Downloading {name} ({helper.size_converter(size)})")
 
         file_path = os.path.join(file_path, name)
         if not os.path.exists(file_path) or override:
@@ -97,6 +105,3 @@ class Challenge(object):
             f.write(f"Name: {self.name}\n")
             f.write(f"Value: {self.value}\n")
             f.write(f"Description: {self.description}\n")
-            self.logger.info(
-                f"Creating Challenge [{self.category or 'No Category'}] {self.name}"
-            )

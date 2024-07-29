@@ -2,7 +2,7 @@ import codecs
 import json
 import logging
 from os import path
-from typing import List
+from typing import Any, Generator, List
 from urllib.parse import urljoin
 
 from cloudscraper import create_scraper
@@ -26,19 +26,19 @@ class CTF(object):
         self.challanges: List[Challenge] = []
 
     @staticmethod
-    def apply_argparser(argument_parser):
+    def apply_argparser(argument_parser) -> None:
         raise NotImplementedError()
 
-    def iter_challenges(self):
+    def iter_challenges(self) -> Generator[Challenge, Any, None]:
         raise NotImplementedError()
 
-    def login(self, no_login=False, **kwargs):
+    def login(self, no_login=False, **kwargs) -> None:
         raise NotImplementedError()
 
     def credential_to_dict(self):
         raise NotImplementedError()
 
-    def credential_from_dict(self, credential):
+    def credential_from_dict(self, credential) -> None:
         raise NotImplementedError()
 
     def logout(self):
@@ -48,7 +48,7 @@ class CTF(object):
         if self.name == "CTF":
             raise NotCompatiblePlatformException()
 
-        with codecs.open("config.json", "w", encoding="utf-8") as f:
+        with codecs.open("challenges.json", "w", encoding="utf-8") as f:
             f.write(
                 json.dumps(
                     {
@@ -63,11 +63,11 @@ class CTF(object):
                 )
             )
 
-    def load_config(self, config_path="config.json") -> bool:
-        if not path.exists(config_path):
+    def load_config(self) -> bool:
+        if not path.exists("challenges.json"):
             return False
 
-        with codecs.open(config_path, "r", encoding="utf-8") as f:
+        with codecs.open("challenges.json", "r", encoding="utf-8") as f:
             config = json.load(f)
             if config["platform"] != self.name or config["url"] != self.url:
                 raise NotCompatiblePlatformException()
@@ -82,6 +82,9 @@ class CTF(object):
     def save(self):
         self.challanges = list(self.iter_challenges())
         for challenge in self.challanges:
+            self.logger.info(
+                f"Creating Challenge [{challenge.category or 'No Category'}] {challenge.name}"
+            )
             challenge.dump()
             challenge.download_all_files()
 
@@ -92,6 +95,9 @@ class CTF(object):
         is_changed = False
         for nc, oc in zip(new_challange, self.challanges):
             if nc != oc:
+                self.logger.info(
+                    f"Updating Challenge [{nc.category or 'No Category'}] {nc.name}"
+                )
                 nc.dump()
                 nc.download_all_files(force)
                 is_changed = True
