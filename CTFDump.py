@@ -12,8 +12,9 @@ def main(args=None):
         args = sys.argv[1:]
 
     # Initial parsing to get the platform
+    platform = ",".join(CTFs.keys())
     initial_parser = ArgumentParser(
-        usage="%(prog)s {CTFd,rCTF} <url> [-h] [-v] [-n] [-F] [-S LIMITSIZE]",
+        usage=f"%(prog)s {platform} <url> [-h] [-v] [-n] [-F] [-S LIMITSIZE]",
         formatter_class=ArgumentDefaultsHelpFormatter,
         add_help=False,
     )
