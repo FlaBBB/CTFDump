@@ -30,7 +30,7 @@ def main(args=None):
     ctfs = CTFs.get(initial_args.ctfs)
 
     parser = ArgumentParser(
-        usage=f"%(prog)s {initial_args.ctfs} <url> [-h] [-v] [-n] [-F] [-S LIMITSIZE] ",
+        usage=f"%(prog)s {{{initial_args.ctfs}}} <url> [-h] [-v] [-n] [-F] [-S LIMITSIZE] ",
         formatter_class=ArgumentDefaultsHelpFormatter,
     )
     ctfs.apply_argparser(parser)
