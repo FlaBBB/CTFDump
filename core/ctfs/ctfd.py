@@ -53,10 +53,12 @@ class CTFd(CTF):
         html = BeautifulSoup(res.text, "html.parser")
         return html.find("input", {"type": "hidden", "name": "nonce"}).get("value")
 
-    def login(self, username, password, no_login=False, **kwargs):
+    def login(self, sys_args, no_login=False, **kwargs):
         if no_login:
             return
 
+        username = sys_args.get("username")
+        password = sys_args.get("password")
         if not username or not password:
             username = os.getenv("CTF_USERNAME", input("User/Email: "))
             password = os.getenv("CTF_PASSWORD", getpass("Password: ", stream=None))

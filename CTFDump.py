@@ -68,9 +68,7 @@ def main(args=None):
 
     ctf = ctfs(sys_args["url"])
     ctf.login(
-        username=sys_args.get("username"),
-        password=sys_args.get("password"),
-        team_token=sys_args.get("token"),
+        sys_args,
         no_login=(sys_args["no_login"] or os.environ.get("CTF_NO_LOGIN")),
     )
 

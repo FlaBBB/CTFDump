@@ -24,10 +24,11 @@ class rCTF(CTF):
     def __get_file_url(file_info):
         return file_info["url"]
 
-    def login(self, team_token, no_login=False, **kwargs):
+    def login(self, sys_args, no_login=False, **kwargs):
         if no_login:
             return True
 
+        team_token = sys_args.get("token")
         if not team_token:
             team_token = input("Team Token: ")
 
