@@ -20,10 +20,10 @@ class CTFd(CTF):
         self.password = ""
 
     @staticmethod
-    def apply_argparser(parser):
-        parser.add_argument("-u", "--username", help="username")
-        parser.add_argument("-p", "--password", help="password")
-        parser.usage += "[-u USERNAME] [-p PASSWORD] "
+    def apply_argparser(argument_parser):
+        argument_parser.add_argument("-u", "--username", help="username")
+        argument_parser.add_argument("-p", "--password", help="password")
+        argument_parser.usage += "[-u USERNAME] [-p PASSWORD] "
 
     @property
     def version(self):
