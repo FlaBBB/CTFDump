@@ -13,7 +13,7 @@ class BadUserNameOrPasswordException(Exception):
     pass
 
 
-class IntechFest(CTF):
+class GZctf(CTF):
     def __init__(self, url):
         super().__init__(url)
         self.username = ""

@@ -73,13 +73,17 @@ class Challenge(object):
         ).replace(" ", "_")
 
     def download_file(self, url, file_path, override=False):
-        if "google.com" in url:
+        if urlparse(url).netloc == "drive.google.com":
             helper.gdown(url, file_path, self.logger, enable=override)
             return
 
         name = self.escape_filename(path.basename(urlparse(url).path))
         size = self.ctf.session.head(url).headers.get("Content-Length")
-        self.logger.info(f"Downloading {name} ({helper.size_converter(size)})")
+
+        if size is None:
+            self.logger.info(f"Downloading {name} (Unknown size)")
+        else:
+            self.logger.info(f"Downloading {name} ({helper.size_converter(size)})")
 
         file_path = os.path.join(file_path, name)
         if not os.path.exists(file_path) or override:

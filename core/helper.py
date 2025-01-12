@@ -48,10 +48,16 @@ def gdrive_size_bypass(response):
     inputs = soup.find_all("input")
     return {i["name"]: i["value"] for i in inputs if i["type"] == "hidden"}
 
+def get_gdrive_fileid(url):
+    if "id=" in url:
+        return url.split("id=")[1]
+    elif "file/d/" in url:
+        return url.split("file/d/")[1].split("/")[0]
+
 
 def gdown(url, path, logger, enable=False):
     baseurl = "https://drive.usercontent.google.com/download"
-    fileid = url.split("id=")[1]
+    fileid = get_gdrive_fileid(url)
     params = {"id": fileid}
     session = requests.session()
     response = session.get(baseurl, params=params, stream=True)
@@ -71,8 +77,6 @@ def gdown(url, path, logger, enable=False):
     if not os.path.exists(path) or enable:
         respons = session.get(baseurl, params=params, stream=True)
         download(respons, path)
-        # if os.path.exists(path):
-        #   print('success')
     return filename, filesize
 
 
