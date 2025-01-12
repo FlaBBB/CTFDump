@@ -11,8 +11,8 @@ from urllib.parse import urljoin, urlparse
 from cloudscraper import create_scraper
 
 from core.challange import Challenge
-from core.ctfs.ctf import CTF
-from core.ctfs.ctfd import BadUserNameOrPasswordException
+from ctfs.ctf import CTF
+from ctfs.ctfd import BadUserNameOrPasswordException
 
 
 class NotCompatiblePlatformException(Exception):
@@ -72,7 +72,7 @@ class AD(CTF):
         )
 
         res_data = res.json()
-        if not res.ok  or not res_data.get("success", False):
+        if not res.ok or not res_data.get("success", False):
             raise BadUserNameOrPasswordException()
 
         self.session.headers.update(

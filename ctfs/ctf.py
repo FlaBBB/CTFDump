@@ -8,6 +8,7 @@ from urllib.parse import urljoin
 from cloudscraper import create_scraper
 
 from core.challange import Challenge
+from downloader import DownloadManager
 
 
 class NotCompatiblePlatformException(Exception):
@@ -15,7 +16,7 @@ class NotCompatiblePlatformException(Exception):
 
 
 class CTF(object):
-    def __init__(self, url):
+    def __init__(self, url, max_size=100, force=False):
         if self.__class__.__name__ == "CTF":
             raise NotCompatiblePlatformException()
 
@@ -24,6 +25,8 @@ class CTF(object):
         self.session = create_scraper()
         self.logger = logging.getLogger(__name__)
         self.challanges: List[Challenge] = []
+
+        DownloadManager.init(self.session, self.logger, force, max_size)
 
     @staticmethod
     def apply_argparser(argument_parser) -> None:
@@ -99,7 +102,7 @@ class CTF(object):
                     f"Updating Challenge [{nc.category or 'No Category'}] {nc.name}"
                 )
                 nc.dump()
-                nc.download_all_files(force)
+                nc.download_all_files()
                 is_changed = True
 
         if is_changed:

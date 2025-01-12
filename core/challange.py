@@ -3,9 +3,8 @@ import logging
 import os
 import re
 from os import path
-from urllib.parse import urlparse
 
-from . import helper
+from downloader import DownloadManager
 
 
 class Challenge(object):
@@ -72,28 +71,11 @@ class Challenge(object):
             self.escape_filename(self.category), self.escape_filename(self.name)
         ).replace(" ", "_")
 
-    def download_file(self, url, file_path, override=False):
-        if urlparse(url).netloc == "drive.google.com":
-            helper.gdown(url, file_path, self.logger, enable=override)
-            return
-
-        name = self.escape_filename(path.basename(urlparse(url).path))
-        size = self.ctf.session.head(url).headers.get("Content-Length")
-
-        if size is None:
-            self.logger.info(f"Downloading {name} (Unknown size)")
-        else:
-            self.logger.info(f"Downloading {name} ({helper.size_converter(size)})")
-
-        file_path = os.path.join(file_path, name)
-        if not os.path.exists(file_path) or override:
-            response = self.ctf.session.get(url, stream=True)
-            helper.download(response, file_path)
-
-    def download_all_files(self, force=False):
+    def download_all_files(self):
+        manager = DownloadManager.get_instance()
         for file_url in self.files:
             try:
-                self.download_file(file_url, self.get_challenge_path(), force)
+                manager.download(file_url, self.get_challenge_path())
             except Exception as e:
                 self.logger.error(f"Failed to download {file_url}: {e}")
                 continue

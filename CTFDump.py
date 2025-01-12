@@ -4,7 +4,7 @@ import sys
 from argparse import ArgumentDefaultsHelpFormatter, ArgumentParser
 
 from core import __version__
-from core.ctfs import CTFs
+from ctfs import CTFs
 
 
 def main(args=None):

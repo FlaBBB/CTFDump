@@ -2,7 +2,7 @@ import json
 from urllib.parse import unquote, urljoin
 
 from core.challange import Challenge
-from core.ctfs.ctf import CTF
+from ctfs.ctf import CTF
 
 
 class BadTokenException(Exception):

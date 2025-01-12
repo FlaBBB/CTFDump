@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 
 from core import NotLoggedInException
 from core.challange import Challenge
-from core.ctfs.ctf import CTF
+from ctfs.ctf import CTF
 
 
 class BadUserNameOrPasswordException(Exception):
