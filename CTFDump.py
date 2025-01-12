@@ -55,7 +55,7 @@ def main(args=None):
         "--limitsize",
         type=int,
         help="limit size of download file in Mb",
-        default=10,
+        default=100,
     )
 
     sys_args = vars(parser.parse_args(args))
@@ -67,14 +67,14 @@ def main(args=None):
         datefmt="%d-%m-%y %H:%M:%S",
     )
 
-    ctf = ctfs(sys_args["url"])
+    ctf = ctfs(sys_args["url"], sys_args["limitsize"], sys_args["force"])
     ctf.login(
         sys_args,
         no_login=(sys_args["no_login"] or os.environ.get("CTF_NO_LOGIN")),
     )
 
     # check available config
-    if ctf.load_config() and not sys_args["force"]:
+    if ctf.load_config():
         logging.info("Config file found, updating challenges")
         ctf.update()
     else:

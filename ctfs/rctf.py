@@ -10,8 +10,8 @@ class BadTokenException(Exception):
 
 
 class rCTF(CTF):
-    def __init__(self, url):
-        super().__init__(url)
+    def __init__(self, url, max_size=100, force=False):
+        super().__init__(url, max_size, force)
         self.BarerToken = ""
         self.team_token = ""
 

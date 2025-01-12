@@ -20,7 +20,7 @@ class NotCompatiblePlatformException(Exception):
 
 
 class AD(CTF):
-    def __init__(self, url):
+    def __init__(self, url, max_size=100, force=False):
         if self.__class__.__name__ == "CTF":
             raise NotCompatiblePlatformException()
 
