@@ -8,7 +8,7 @@ from core.helper import size_converter
 from downloader.base import BaseSource
 
 
-class Drive(BaseSource):
+class DriveSource(BaseSource):
     BASE_URL = "https://drive.usercontent.google.com/download"
     FILE_PATTERNS = [r"drive\.google\.com/file/d/.*", r"drive\.google\.com/open\?id=.*"]
 

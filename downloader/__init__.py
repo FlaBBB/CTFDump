@@ -6,9 +6,10 @@ from urllib.parse import urlparse
 import tqdm
 
 from core import helper
-from downloader.drive import Drive
+from downloader.drive import DriveSource
+from downloader.mediafire import MediafireSource
 
-SOURCES: List = [Drive]
+SOURCES: List = [DriveSource, MediafireSource]
 
 
 class FailedToDownloadFile(Exception):
@@ -116,9 +117,9 @@ class DownloadManager:
                 return
 
         # Fall back to direct download
-        self._handle_direct_download(url, path)
+        self.direct_download(url, path)
 
-    def _handle_direct_download(self, url: str, path: str) -> None:
+    def direct_download(self, url: str, path: str) -> None:
         """Handle direct URL download when no source matches"""
         filename = self.escape_filename(os.path.basename(urlparse(url).path))
         size = self._get_url_size(url)
@@ -163,12 +164,12 @@ class DownloadManager:
     ) -> bool:
         """Check if download should be skipped"""
         if os.path.exists(filepath) and not self.is_force:
-            self.logger.info(f"Skipping \"{filename}\" (already downloaded)")
+            self.logger.info(f'Skipping "{filename}" (already downloaded)')
             return True
 
         if total_size and total_size > self.max_size_bytes:
             self.logger.info(
-                f"Skipping \"{filename}\" with size {helper.size_converter(total_size)} (size too large)"
+                f'Skipping "{filename}" with size {helper.size_converter(total_size)} (size too large)'
             )
             return True
 
