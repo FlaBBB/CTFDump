@@ -1,9 +1,12 @@
 import os
 import re
+import time
+from http.client import IncompleteRead
 from typing import List, Optional
 from urllib.parse import urlparse
 
 import tqdm
+from requests.exceptions import ConnectionError
 
 from core import helper
 from downloader.drive import DriveSource
@@ -56,7 +59,12 @@ class DownloadManager:
         return DownloadManager._instance
 
     def download_with_progress(
-        self, response, path: str, filename: str, total_size: Optional[int]
+        self,
+        response,
+        path: str,
+        filename: str,
+        total_size: Optional[int],
+        retries: int = 3,
     ) -> None:
         """
         Download file with progress bar
@@ -66,20 +74,35 @@ class DownloadManager:
             path: Download directory path
             filename: Output filename
             total_size: Total file size in bytes, might be None for text content
+            retries: Number of retries in case of failure
         """
         filepath = os.path.join(path, filename)
 
         if self._should_skip_download(filepath, filename, total_size):
             return
 
-        if total_size is None:
-            self.logger.info(f"Downloading {filename} (Unknown size)")
-            self._download_file_without_size(response, filepath, filename)
+        attempt = 0
+        while attempt < retries:
+            try:
+                if total_size is None:
+                    self.logger.info(f"Downloading {filename} (Unknown size)")
+                    self._download_file_without_size(response, filepath, filename)
+                else:
+                    self.logger.info(
+                        f"Downloading {filename} ({helper.size_converter(total_size)})"
+                    )
+                    self._download_file_with_size(
+                        response, filepath, filename, total_size
+                    )
+                break  # Exit loop if download is successful
+            except (ConnectionError, IncompleteRead) as e:
+                attempt += 1
+                self.logger.warning(
+                    f"Download failed: {e}. Retrying {attempt}/{retries}..."
+                )
+                time.sleep(0.5)  # Wait before retrying
         else:
-            self.logger.info(
-                f"Downloading {filename} ({helper.size_converter(total_size)})"
-            )
-            self._download_file_with_size(response, filepath, filename, total_size)
+            self.logger.error(f"Failed to download {filename} after {retries} attempts")
 
     def invoke(self, getable_url: str, path: str, filename: str) -> None:
         """
