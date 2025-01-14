@@ -81,16 +81,14 @@ class DownloadManager:
         if self._should_skip_download(filepath, filename, total_size):
             return
 
+        self._log_download_start(filename, total_size)
+
         attempt = 0
         while attempt < retries:
             try:
                 if total_size is None:
-                    self.logger.info(f"Downloading {filename} (Unknown size)")
                     self._download_file_without_size(response, filepath, filename)
                 else:
-                    self.logger.info(
-                        f"Downloading {filename} ({helper.size_converter(total_size)})"
-                    )
                     self._download_file_with_size(
                         response, filepath, filename, total_size
                     )
@@ -102,7 +100,9 @@ class DownloadManager:
                 )
                 time.sleep(0.5)  # Wait before retrying
         else:
-            self.logger.error(f"Failed to download {filename} after {retries} attempts")
+            self.logger.error(
+                f'Failed to download "{filename}" after {retries} attempts'
+            )
 
     def invoke(self, getable_url: str, path: str, filename: str) -> None:
         """
@@ -117,7 +117,7 @@ class DownloadManager:
         total_size, is_binary = self._get_content_info(response)
 
         if not is_binary:
-            self.logger.warning(f"Warning: {filename} might be a text file")
+            self.logger.warning(f'Warning: "{filename}" might be a text file')
 
         self.download_with_progress(response, path, filename, total_size)
 
@@ -145,9 +145,7 @@ class DownloadManager:
     def direct_download(self, url: str, path: str) -> None:
         """Handle direct URL download when no source matches"""
         filename = self.escape_filename(os.path.basename(urlparse(url).path))
-        size = self._get_url_size(url)
 
-        self._log_download_start(filename, size)
         self.invoke(url, path, filename)
 
     @staticmethod
@@ -178,10 +176,6 @@ class DownloadManager:
             raise FailedToDownloadFile(f"Failed to download from {url}")
         return response
 
-    def _get_url_size(self, url: str) -> Optional[int]:
-        """Get file size from URL using HEAD request"""
-        return self.session.head(url).headers.get("Content-Length")
-
     def _should_skip_download(
         self, filepath: str, filename: str, total_size: Optional[int]
     ) -> bool:
@@ -203,7 +197,7 @@ class DownloadManager:
     ) -> None:
         """Download file with known size using progress bar"""
         with open(filepath, "wb") as file, tqdm.tqdm(
-            desc=f"Downloading {filename}",
+            desc=f'Downloading "{filename}"',
             total=total_size,
             unit="B",
             unit_scale=True,
@@ -220,7 +214,7 @@ class DownloadManager:
         """Download file with unknown size using simplified progress"""
         downloaded_size = 0
         with open(filepath, "wb") as file, tqdm.tqdm(
-            desc=f"Downloading {filename}",
+            desc=f'Downloading "{filename}"',
             unit="B",
             unit_scale=True,
             unit_divisor=1024,
@@ -232,12 +226,14 @@ class DownloadManager:
                 bar.update(size)
 
         self.logger.info(
-            f"Downloaded {filename} ({helper.size_converter(downloaded_size)})"
+            f'Downloaded "{filename}" ({helper.size_converter(downloaded_size)})'
         )
 
     def _log_download_start(self, filename: str, size: Optional[int]) -> None:
         """Log download start with file info"""
         if size is None:
-            self.logger.info(f"Downloading {filename} (Unknown size)")
+            self.logger.info(f'Downloading "{filename}" (Unknown size)')
         else:
-            self.logger.info(f"Downloading {filename} ({helper.size_converter(size)})")
+            self.logger.info(
+                f'Downloading "{filename}" ({helper.size_converter(size)})'
+            )
