@@ -87,7 +87,6 @@ class DriveSource(BaseSource):
                 return match.group(1)
 
         # Fall back to parsing HTML
-        print(response.text)
         return self._find_in_html("a", response.text, -4)
 
     def _parse_filesize(self, response) -> float:
