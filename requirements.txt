@@ -3,3 +3,5 @@ beautifulsoup4>= 4.9.3
 cloudscraper>= 1.2.71
 tqdm>= 4.67.1
 selenium>= 4.27.1
+rarfile>= 4.2
+py7zr>= 0.22.0
