@@ -2,7 +2,8 @@
 
 import re
 from os import path
-from setuptools import setup, find_packages
+
+from setuptools import find_packages, setup
 
 __folder__ = path.dirname(__file__)
 
@@ -10,9 +11,11 @@ with open(path.join(__folder__, "README.md")) as ld_file:
     long_description = ld_file.read()
     ld_file.flush()
 
-with open(path.join(__folder__, "CTFDump.py")) as lib_file:
-    r = re.search(r"__version__\s+=\s+(?P<q>[\"'])(?P<ver>\d+(?:\.\d+)*)(?P=q)", lib_file.read())
-    version = r.group('ver')
+with open(path.join(__folder__, "core/__init__.py")) as lib_file:
+    r = re.search(
+        r"__version__\s+=\s+(?P<q>[\"'])(?P<ver>\d+(?:\.\d+)*)(?P=q)", lib_file.read()
+    )
+    version = r.group("ver")
 
 with open(path.join(__folder__, "requirements.txt")) as req_file:
     install_requires = req_file.read()
@@ -29,7 +32,7 @@ setup(
     py_modules=["CTFDump"],
     entry_points={
         "console_scripts": [
-            "ctf-dump = CTFDump:main",
+            "CTFDump = CTFDump:main",
         ]
     },
     install_requires=install_requires,
@@ -49,5 +52,5 @@ setup(
         "Topic :: Security",
         "Topic :: Internet",
         "Topic :: Internet :: WWW/HTTP",
-    ]
+    ],
 )
