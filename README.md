@@ -1,39 +1,112 @@
 # CTFDump
-![Logo](https://github.com/hendrykeren/CTFDump/blob/master/assets/logo/250%20px.png)
+![Logo](/assets/logo/250%20px.png)
 
 CTFd Dump Tool - When you want to have an offline copy of a CTF.
 
-Fork of [realgam3/CTFDump](https://github.com/realgam3/CTFDump)
+> Fork of [realgam3/CTFDump](https://github.com/realgam3/CTFDump)
 
-### Basic Usage
+## Features
 
-`python CTFDump.py -u username -p password https://demo.ctfd.io/`
+- **Platform Support**:
+    - **CTFd**
+    - **rCTF**
+    - **GZctf**
+    - **AD** (Attack-Defense)
+- **Download Sources**:
+    - **Google Drive**
+    - **Mediafire**
+    - Direct downloads (Standard HTTP/HTTPS)
+- **Offline Backup**: Downloads challenges, descriptions, files, and more for offline access.
+- **resume Support**: Smart configuration file to track downloaded challenges and updates.
+- **Authentication**: Supports credential-based login (Username/Password) and Token-based authentication.
+- **No Login Mode**: limited dumping for public CTF data without credentials.
 
-> or for rCTF platform
+## Installation
 
-`python CTFDump.py -c rCTF -t team-token https://demo.ctfd.io/`
+### Prerequisites
 
-### Command Line Flags
+- Python 3.x
+- `pip` package manager
 
-See `--help` for the complete list, but in short:
+### Steps
 
-```text
-usage: CTFDump.py [-h] [-v] [-c {CTFd,rCTF}] [-n] [-u USERNAME] [-p PASSWORD] [-t TOKEN] url
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/hendrykeren/CTFDump.git
+   cd CTFDump
+   ```
 
-positional arguments:
-  url                   ctf url (for example: https://demo.ctfd.io/)
+2. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-options:
-  -h, --help            show this help message and exit
-  -v, --version         show program's version number and exit
-  -c {CTFd,rCTF}, --ctf-platform {CTFd,rCTF}
-                        ctf platform (default: CTFd)
-  -n, --no-login        login is not needed (default: False)
-  -u USERNAME, --username USERNAME username (default: None)
-  -p PASSWORD, --password PASSWORD password (default: None)
-  -t TOKEN, --token TOKEN team token for rCTF (default: None)
+   > Alternatively, you can install it directly via setup.py:
+   > ```bash
+   > pip install .
+   > ```
+
+## Usage
+
+The general syntax for `CTFDump` is:
+
+```bash
+python CTFDump.py <platform> <url> [options]
 ```
 
-### Kudos
+### Arguments
+
+- `platform`: The CTF platform to target. Choices: `CTFd`, `rCTF`.
+- `url`: The URL of the CTF (e.g., `https://demo.ctfd.io/`).
+
+### Options
+
+| Flag | Long Flag | Description | Default |
+| :--- | :--- | :--- | :--- |
+| `-u` | `--username` | Username for login | `None` |
+| `-p` | `--password` | Password for login | `None` |
+| `-t` | `--token` | Team token (for rCTF) | `None` |
+| `-n` | `--no-login` | Skip login (public data only) | `False` |
+| `-S` | `--limitsize` | Limit download size in MB | `100` |
+| `-F` | `--force` | Ignore config file and re-download | `False` |
+| `-v` | `--version` | Show program version | |
+| `-h` | `--help` | Show help message | |
+
+### Examples
+
+#### Basic Usage (CTFd)
+Dump a CTFd instance using username and password:
+```bash
+python CTFDump.py CTFd https://demo.ctfd.io/ -u myuser -p mypassword
+```
+
+#### rCTF Usage
+Dump an rCTF instance using a team token:
+```bash
+python CTFDump.py rCTF https://rctf.example.com/ -t my-team-token
+```
+
+#### No Login
+Dump public information without logging in:
+```bash
+python CTFDump.py CTFd https://demo.ctfd.io/ --no-login
+```
+
+#### Limit Download Size
+Restrict file downloads to 50MB max:
+```bash
+python CTFDump.py CTFd https://demo.ctfd.io/ -u user -p pass -S 50
+```
+
+## Contributing
+
+We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTE.md) for details on how to get started, report bugs, or submit pull requests.
+
+## License
+
+This project is licensed under the GPLv3 License - see the [LICENSE](LICENSE) file for details.
+
+## Kudos
+
 * [mosheDO](https://github.com/mosheDO) - For The rCTF Support
 * [hendrykeren](https://github.com/hendrykeren) - For The Awesome Logo
