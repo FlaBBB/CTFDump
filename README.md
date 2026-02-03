@@ -23,16 +23,27 @@ CTFd Dump Tool - When you want to have an offline copy of a CTF.
 
 ## Installation
 
-### Prerequisites
+### Recommended (pipx)
 
-- Python 3.x
-- `pip` package manager
+This is the cleanest way to install the tool globally without affecting your system packages.
 
-### Steps
+```bash
+pipx install git+https://github.com/FlaBBB/CTFDump.git
+```
 
+### via pip
+
+You can also install it directly using pip:
+
+```bash
+pip install git+https://github.com/FlaBBB/CTFDump.git
+```
+
+### From Source (Development)
+W
 1. Clone the repository:
    ```bash
-   git clone https://github.com/hendrykeren/CTFDump.git
+   git clone https://github.com/FlaBBB/CTFDump.git
    cd CTFDump
    ```
 
@@ -41,17 +52,12 @@ CTFd Dump Tool - When you want to have an offline copy of a CTF.
    pip install -r requirements.txt
    ```
 
-   > Alternatively, you can install it directly via setup.py:
-   > ```bash
-   > pip install .
-   > ```
-
 ## Usage
 
 The general syntax for `CTFDump` is:
 
 ```bash
-python CTFDump.py <platform> <url> [options]
+CTFDump <platform> <url> [options]
 ```
 
 ### Arguments
@@ -77,25 +83,25 @@ python CTFDump.py <platform> <url> [options]
 #### Basic Usage (CTFd)
 Dump a CTFd instance using username and password:
 ```bash
-python CTFDump.py CTFd https://demo.ctfd.io/ -u myuser -p mypassword
+CTFDump CTFd https://demo.ctfd.io/ -u myuser -p mypassword
 ```
 
 #### rCTF Usage
 Dump an rCTF instance using a team token:
 ```bash
-python CTFDump.py rCTF https://rctf.example.com/ -t my-team-token
+CTFDump rCTF https://rctf.example.com/ -t my-team-token
 ```
 
 #### No Login
 Dump public information without logging in:
 ```bash
-python CTFDump.py CTFd https://demo.ctfd.io/ --no-login
+CTFDump CTFd https://demo.ctfd.io/ --no-login
 ```
 
 #### Limit Download Size
 Restrict file downloads to 50MB max:
 ```bash
-python CTFDump.py CTFd https://demo.ctfd.io/ -u user -p pass -S 50
+CTFDump CTFd https://demo.ctfd.io/ -u user -p pass -S 50
 ```
 
 ## Contributing
