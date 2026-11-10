@@ -95,7 +95,7 @@ class CTF(object):
 
     def update(self, force=False):
         new_challange = list(self.iter_challenges())
-        is_changed = False
+        is_changed = len(new_challange) != len(self.challanges)
         for nc, oc in zip(new_challange, self.challanges):
             if nc != oc:
                 self.logger.info(
@@ -104,6 +104,14 @@ class CTF(object):
                 nc.dump()
                 nc.download_all_files()
                 is_changed = True
+
+        for nc in new_challange[len(self.challanges):]:
+            self.logger.info(
+                f"Creating Challenge [{nc.category or 'No Category'}] {nc.name}"
+            )
+            nc.dump()
+            nc.download_all_files()
+            is_changed = True
 
         if is_changed:
             self.challanges = new_challange

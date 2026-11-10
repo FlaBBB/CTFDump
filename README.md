@@ -12,6 +12,7 @@ CTFd Dump Tool - When you want to have an offline copy of a CTF.
     - **rCTF**
     - **GZctf**
     - **AD** (Attack-Defense)
+    - **SiberLab** (Attack-Defense, JWT API)
 - **Download Sources**:
     - **Google Drive**
     - **Mediafire**
@@ -62,7 +63,7 @@ CTFDump <platform> <url> [options]
 
 ### Arguments
 
-- `platform`: The CTF platform to target. Choices: `CTFd`, `rCTF`.
+- `platform`: The CTF platform to target. Choices: `CTFd`, `rCTF`, `GZctf`, `AD`, `SiberLab`.
 - `url`: The URL of the CTF (e.g., `https://demo.ctfd.io/`).
 
 ### Options
@@ -90,6 +91,12 @@ CTFDump CTFd https://demo.ctfd.io/ -u myuser -p mypassword
 Dump an rCTF instance using a team token:
 ```bash
 CTFDump rCTF https://rctf.example.com/ -t my-team-token
+```
+
+#### SiberLab Usage
+Dump a SiberLab Attack & Defense instance using team credentials:
+```bash
+CTFDump SiberLab https://gemastik19-finals.siberlab.id -u "team name" -p mypassword
 ```
 
 #### No Login
